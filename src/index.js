@@ -8,7 +8,20 @@ const apiRouter = require('./routes/router');
 const { connectDB } = require('./config/db');
 
 app.use(express.json());
-app.use(cors());
+
+// Explicit CORS config for Vite default port
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+// Request logger to debug
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 app.use('/api', apiRouter);
 
